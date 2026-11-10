@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Generador de Licencias</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background: #1e1e1e; color: white; text-align: center; padding-top: 50px; }
+        input { padding: 10px; font-size: 16px; border-radius: 5px; border: none; margin-bottom: 20px; }
+        button { padding: 10px 20px; font-size: 16px; background: #28a745; color: white; border: none; border-radius: 5px; cursor: pointer; }
+        button:hover { background: #218838; }
+        #resultado { margin-top: 30px; font-size: 24px; color: #00FF00; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <h1>Generador de Licencias VIP</h1>
+    <p>Ingresa tu contraseña maestra para generar un código nuevo:</p>
+
+    <input type="password" id="password" placeholder="Contraseña secreta">
+    <br>
+    <button onclick="generar()">Generar Código</button>
+
+    <div id="resultado"></div>
+
+    <script>
+        async function generar() {
+            const pass = document.getElementById('password').value;
+            const resultadoDiv = document.getElementById('resultado');
+
+            resultadoDiv.innerText = "Generando...";
+            resultadoDiv.style.color = "orange";
+
+            try {
+                const response = await fetch('/api/generar?pass=' + encodeURIComponent(pass));
+                const data = await response.json();
+
+                if (response.ok) {
+                    resultadoDiv.innerText = "Licencia Creada: " + data.codigo;
+                    resultadoDiv.style.color = "#00FF00";
+                } else {
+                    resultadoDiv.innerText = data.error;
+                    resultadoDiv.style.color = "red";
+                }
+            } catch (error) {
+                resultadoDiv.innerText = "Error de conexión con el servidor.";
+                resultadoDiv.style.color = "red";
+            }
+        }
+    </script>
+</body>
+</html>
